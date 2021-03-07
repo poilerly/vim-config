@@ -56,9 +56,9 @@
             " Be nice and check for multi_byte even if the config requires
             " multi_byte support most of the time
             if has("multi_byte")
-                " Windows cmd.exe still uses cp850. If Windows ever moved to
+                " Windows cmd.exe still uses cp936. If Windows ever moved to
                 " Powershell as the primary terminal, this would be utf-8
-                set termencoding=cp850
+                set termencoding=cp936
                 " Let Vim use utf-8 internally, because many scripts require this
                 set encoding=utf-8
                 setglobal fileencoding=utf-8
@@ -79,15 +79,9 @@
         source ~/.vimrc.plugged
     endif
 
-    "if filereadable(expand("~/.vimrc.bundles"))
-    "    source ~/.vimrc.bundles
-    "endif
-
 " }
 
 " General {
-
-    set background=dark     " Assume a dark background
 
     filetype plugin indent on   " Automatically detect file types
     syntax on                   " Syntax highlighting
@@ -152,8 +146,8 @@
             set undoreload=10000        " Maximum number lines to save for undo on a buffer reload
         endif
 
-        " To disable views add the following to your .vimrc.before.local file:
-        "   let g:spf13_no_views = 1
+        " To disable views add the following to your .vimrc file:
+        " let g:spf13_no_views = 1
         if !exists('g:spf13_no_views')
             " Add exclusions to mkview and loadview
             " eg: *.*, svn-commit.tmp
@@ -167,13 +161,15 @@
 
 " Vim UI {
 
-    if filereadable(expand("~/.vim/bundle/vim-colors-solarized/colors/solarized.vim"))
+    set background=dark             " Assume a dark background
+
+    if filereadable(expand("~/.vim/plugged/vim-colors-solarized/colors/solarized.vim"))
         let g:solarized_termcolors=256
         let g:solarized_termtrans=1
         let g:solarized_contrast="normal"
         let g:solarized_visibility="normal"
         let g:solarized_italic=0
-        colors solarized             " Load a colorscheme
+        colors solarized            " Load a colorscheme
     endif
 
     set tabpagemax=15               " Only show 15 tabs
@@ -199,7 +195,9 @@
         " Broken down into easily includeable segments
         set statusline=%<%f\                     " Filename
         set statusline+=%w%h%m%r                 " Options
-        set statusline+=%{fugitive#statusline()} " Git Hotness
+        if isdirectory(expand("~/.vim/plugged/vim-fugitive/"))
+            set statusline+=%{fugitive#statusline()} " Git Hotness
+        endif
         set statusline+=\ [%{&ff}/%Y]            " Filetype
         set statusline+=\ [%{getcwd()}]          " Current dir
         set statusline+=%=%-14.(%l,%c%V%)\ %p%%  " Right aligned file nav info
@@ -229,7 +227,7 @@
 
     set nowrap                      " Do not wrap long lines
     set autoindent                  " Indent at the same level of the previous line
-    "set cindent
+    "set cindent                     " Indent sams as C syntax
     set shiftwidth=4                " Use indents of 4 spaces
     set expandtab                   " Tabs are spaces, not tabs
     set tabstop=4                   " An indentation every four columns
@@ -244,9 +242,9 @@
     " Remove trailing whitespaces and ^M chars To disable the stripping of whitespace, add the following to .vimrc file:
     " let s:keep_trailing_whitespace = 1
     autocmd FileType c,cpp,python,java,go,php,javascript,puppet,rust,twig,xml,yml,perl,sql autocmd BufWritePre <buffer> if !exists('s:keep_trailing_whitespace') | call StripTrailingWhitespace() | endif
-    autocmd BufWritePre *.md call StripTrailingWhitespace()
+    autocmd BufWritePre *.md call StripTrailingWhitespace() "保存*.md类型文件前调用函数清除尾部多余的空字符
 
-    autocmd FileType haskell,ruby setlocal expandtab shiftwidth=2 softtabstop=2
+    autocmd FileType haskell,ruby setlocal expandtab shiftwidth=2 softtabstop=2 "当检测到文件类型为haskell,ruby时,设置仅对本文件有效的缩进选项
 
 " }
 
@@ -361,7 +359,7 @@
         nnoremap <C-F2> :if &go=~#'T'<Bar>set go-=T<Bar>else<Bar>set go+=T<Bar>endif<CR>
         nnoremap <C-F3> :if &go=~#'r'<Bar>set go-=r<Bar>else<Bar>set go+=r<Bar>endif<CR>
 
-        set lines=40      " 40 lines of text instead of 24
+        set lines=40      " 40 lines of text
         set columns=100   " 100 columns of text
 
         if LINUX()
@@ -372,8 +370,7 @@
             "set guifont=DejaVu_Sans_Mono_for_Powerline:h13:cANSI
             "set guifont=Droid_Sans_Mono_Dotted:h13:cANSI
             " set guifont=Droid_Sans_Mono_slashed:h13:cANSI
-            set guifont=Consolas_for_Powerline:h13
-            ":cANSI
+            set guifont=Consolas_for_Powerline:h13 ":cANSI
         endif
 
     else
@@ -401,7 +398,7 @@
     " }
 
     " NerdTree {
-        if isdirectory(expand("~/.vim/bundle/nerdtree"))
+        if isdirectory(expand("~/.vim/plugged/nerdtree"))
             map <C-e> <plug>NERDTreeTabsToggle<CR>
 
             let NERDTreeShowBookmarks=1 "显示Bookmarks
@@ -436,7 +433,7 @@
     " }
 
     " TagBar {
-        if isdirectory(expand("~/.vim/bundle/tagbar/"))
+        if isdirectory(expand("~/.vim/plugged/tagbar/"))
             "打开或关闭tagbar
             nnoremap <silent> <leader>tt :TagbarToggle<CR>
 
@@ -456,7 +453,7 @@
     "}
 
     " UndoTree {
-        if isdirectory(expand("~/.vim/bundle/undotree/"))
+        if isdirectory(expand("~/.vim/plugged/undotree/"))
             nnoremap <Leader>u :UndotreeToggle<CR>
             " If undotree is opened, it is likely one wants to interact with it.
             let g:undotree_SetFocusWhenToggle=1
@@ -465,7 +462,7 @@
 
     " Sessionman {
         set sessionoptions=blank,buffers,curdir,folds,tabpages,winsize
-        if isdirectory(expand("~/.vim/bundle/sessionman.vim/"))
+        if isdirectory(expand("~/.vim/plugged/sessionman.vim/"))
             nmap <leader>sl :SessionList<CR>
             nmap <leader>ss :SessionSave<CR>
             nmap <leader>sc :SessionClose<CR>
@@ -473,7 +470,7 @@
     " }
 
     " delimitMate {
-        if isdirectory(expand("~/.vim/bundle/delimitMate/"))
+        if isdirectory(expand("~/.vim/plugged/delimitMate/"))
             "设置换行后自动扩展
             let delimitMate_expand_cr = 1
 
@@ -486,20 +483,20 @@
     "}
 
     " Rainbow {
-        if isdirectory(expand("~/.vim/bundle/rainbow/"))
+        if isdirectory(expand("~/.vim/plugged/rainbow/"))
             "if you want to enable it later via :RainbowToggle
             let g:rainbow_active = 1
         endif
     "}
 
     " DoxygenToolkit.vim {
-        if isdirectory(expand("~/.vim/bundle/DoxygenToolkit.vim/"))
+        if isdirectory(expand("~/.vim/plugged/DoxygenToolkit.vim/"))
             let g:DoxygenToolkit_authorName="poiler@163.com"
         endif
     "}
 
     " Nerdcommenter{
-        if isdirectory(expand("~/.vim/bundle/nerdcommenter/"))
+        if isdirectory(expand("~/.vim/plugged/nerdcommenter/"))
             " 默认情况下在注释分隔符后面添加空格
             let g:NERDSpaceDelims = 1
 
@@ -509,7 +506,7 @@
     "}
 
     " Tabular {
-        if isdirectory(expand("~/.vim/bundle/tabular"))
+        if isdirectory(expand("~/.vim/plugged/tabular"))
             nmap <Leader>a& :Tabularize /&<CR>
             vmap <Leader>a& :Tabularize /&<CR>
             nmap <Leader>a= :Tabularize /^[^=]*\zs=<CR>
@@ -540,7 +537,7 @@
 
         " See `:echo g:airline_theme_map` for some more choices
         " Default in terminal vim is 'dark'
-        if isdirectory(expand("~/.vim/bundle/vim-airline/"))
+        if isdirectory(expand("~/.vim/plugged/vim-airline/"))
             let g:airline_powerline_fonts=1
 
             " if !exists('g:airline_symbols')
@@ -572,7 +569,7 @@
             " nmap <leader>+ <Plug>AirlineSelectNextTab
         endif
 
-        if isdirectory(expand("~/.vim/bundle/vim-airline-themes/"))
+        if isdirectory(expand("~/.vim/plugged/vim-airline-themes/"))
             if !exists('g:airline_theme')
                 "let g:airline_theme = 'powerlineish'
                 "let g:airline_theme = 'solarized'
@@ -587,7 +584,7 @@
     " }
 
     " ctrlp {
-        if isdirectory(expand("~/.vim/bundle/ctrlp.vim/"))
+        if isdirectory(expand("~/.vim/plugged/ctrlp.vim/"))
             let g:ctrlp_working_path_mode = 'ra'
             nnoremap <silent> <D-t> :CtrlP<CR>
             nnoremap <silent> <D-r> :CtrlPMRU<CR>
@@ -618,7 +615,7 @@
                 \ 'fallback': s:ctrlp_fallback
             \ }
 
-            if isdirectory(expand("~/.vim/bundle/ctrlp-funky/"))
+            if isdirectory(expand("~/.vim/plugged/ctrlp-funky/"))
                 " CtrlP extensions
                 let g:ctrlp_extensions = ['funky']
 
@@ -629,7 +626,7 @@
     "}
 
     " Fugitive {
-        if isdirectory(expand("~/.vim/bundle/vim-fugitive/"))
+        if isdirectory(expand("~/.vim/plugged/vim-fugitive/"))
             nnoremap <silent> <leader>gs :Gstatus<CR>
             nnoremap <silent> <leader>gd :Gdiff<CR>
             nnoremap <silent> <leader>gc :Gcommit<CR>
@@ -646,11 +643,13 @@
     "}
 
     " YouCompleteMe {
-        if isdirectory(expand("~/.vim/bundle/YouCompleteMe/"))
+        if isdirectory(expand("~/.vim/plugged/YouCompleteMe/"))
             let g:ycm_auto_trigger=1
 
+            let g:ycm_clangd_binary_path="C:/Softwares/LLVM/lib/clang/11.0.1/include"
+
             "全局模版文件所在的路径
-            let g:ycm_global_ycm_extra_conf = $HOME.'/.vim/bundle/YouCompleteMe/third_party/ycmd/cpp/ycm/.ycm_extra_conf.py'
+            let g:ycm_global_ycm_extra_conf = $HOME.'/.vim/plugged/YouCompleteMe/third_party/ycmd/.ycm_extra_conf.py'
 
             "关闭载入配置文件提示
             let g:ycm_confirm_extra_conf = 0
@@ -683,7 +682,7 @@
             let g:UltiSnipsExpandTrigger = '<C-j>'
             let g:UltiSnipsJumpForwardTrigger = '<C-j>'
             let g:UltiSnipsJumpBackwardTrigger = '<C-k>'
-            "let g:UltiSnipsSnippetDirectories=$HOME.'/.vim/bundle/vim-snippets/snippets'
+            "let g:UltiSnipsSnippetDirectories=$HOME.'/.vim/plugged/vim-snippets/snippets'
 
             " Enable omni completion.
             autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
@@ -709,7 +708,7 @@
     " }
 
     " Syntastic {
-        if isdirectory(expand("~/.vim/bundle/syntastic/"))
+        if isdirectory(expand("~/.vim/plugged/syntastic/"))
             "打开当前文件的错误或警告列表
             nmap <leader>e :Errors<CR>
 
@@ -760,7 +759,7 @@
     " }
 
     " python-mode {
-        if isdirectory(expand("~/.vim/bundle/python-mode"))
+        if isdirectory(expand("~/.vim/plugged/python-mode"))
             " Disable whole plugin if python support not present
             if !has('python') && !has('python3')
                 let g:pymode = 0
@@ -837,6 +836,7 @@
                 set background=dark
             endif
         endfunction
+
         noremap <leader>bg :call ToggleBG()<CR>
    " }
 
@@ -871,6 +871,7 @@
                 endif
             endfor
         endfunction
+
         call InitializeDirectories()
     " }
 
@@ -890,7 +891,7 @@
 
     " Strip whitespace {
         function! StripTrailingWhitespace()
-            " Preparation: save last search, and cursor position.
+            " preparation: save last search, and cursor position.
             let _s=@/
             let l = line(".")
             let c = col(".")
@@ -900,21 +901,27 @@
             let @/=_s
             call cursor(l, c)
         endfunction
+
+        noremap <A-F1>:call StripTrailingWhitespace()<CR>
     " }
 
-    " VimConfig {
+    " Vim Config {
         function! s:ExpandFilenameAndExecute(command, file)
             execute a:command . " " . expand(a:file, ":p")
         endfunction
 
         function! s:EditVimConfig()
-            call <SID>ExpandFilenameAndExecute("edit", "~/.vimrc.bundles")
+            call <SID>ExpandFilenameAndExecute("edit", "~/.vimrc.plugged")
             call <SID>ExpandFilenameAndExecute("edit", "~/.vimrc")
             execute bufwinnr(".vimrc") . "wincmd w"
         endfunction
 
+        " The mappings for editing and applying the Vim configuration.
         execute "noremap " . s:edit_config_mapping " :call <SID>EditVimConfig()<CR>"
         execute "noremap " . s:apply_config_mapping . " :source ~/.vimrc<CR>"
+
+        let s:edit_config_mapping = '<leader>se'
+        let s:apply_config_mapping = '<leader>sa'
     " }
 
 " }

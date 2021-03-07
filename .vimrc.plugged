@@ -8,7 +8,6 @@ call plug#begin('~/.vim/plugged')
 " Shorthand notation; fetches https://github.com/junegunn/vim-easy-align
 "Plug 'junegunn/vim-easy-align'
 
-Plug 'VundleVim/Vundle.vim'
 Plug 'altercation/vim-colors-solarized'
 Plug 'rhysd/conflict-marker.vim'
 Plug 'Raimondi/delimitMate'
@@ -29,6 +28,7 @@ Plug 'vim-scripts/winmanager'
 Plug 'vim-scripts/DoxygenToolkit.vim'
 Plug 'vim-scripts/a.vim'
 Plug 'vim-scripts/pythoncomplete'
+Plug 'ycm-core/YouCompleteMe'
 
 " Any valid git URL is allowed
 "Plug 'https://github.com/junegunn/vim-github-dashboard.git'

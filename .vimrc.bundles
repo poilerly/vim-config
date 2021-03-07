@@ -102,7 +102,7 @@
             Plugin 'garbas/vim-snipmate'
             Plugin 'honza/vim-snippets'
         elseif count(g:plugin_groups, 'youcompleteme')
-            " Plugin 'Valloric/YouCompleteMe'
+            Plugin 'Valloric/YouCompleteMe'
             Plugin 'SirVer/ultisnips'
             Plugin 'honza/vim-snippets'
         endif
