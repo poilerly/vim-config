@@ -27,7 +27,6 @@ Plug 'majutsushi/tagbar'
 Plug 'vim-scripts/winmanager'
 Plug 'vim-scripts/DoxygenToolkit.vim'
 Plug 'vim-scripts/a.vim'
-Plug 'vim-scripts/pythoncomplete'
 Plug 'ycm-core/YouCompleteMe'
 
 " Any valid git URL is allowed
